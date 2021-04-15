@@ -45,16 +45,16 @@ class SlackBot:
         
         if len(user_ids) % 2 == 0:
             for x in range(0, len(user_ids), 2):
-                member_string += self.mention_user(user_ids[x]) + " pairs with " + self.mention_user(user_ids[x + 1]) + "\n"
+                member_string += self.mention_user(user_ids[x]) + " pears with " + self.mention_user(user_ids[x + 1]) + "\n"
         else:
-            member_string += self.mention_user(user_ids[0]) + " pairs with " 
+            member_string += self.mention_user(user_ids[0]) + " pears with " 
             for x in range(1, len(user_ids), 2):
-                member_string += self.mention_user(user_ids[x]) + " pairs with " + self.mention_user(user_ids[x + 1]) + "\n"
+                member_string += self.mention_user(user_ids[x]) + " pears with " + self.mention_user(user_ids[x + 1]) + "\n"
         
         return member_string
 
     def post_to_channel(self, user_ids):
-        user_string = "All hail your pairing god, for it hath proclaimed: \n\n"
+        user_string = "You hear a rustling from the fruit bowl nearby. A lone pear within declares: \n\n"
         user_string += self.format_user_ids_into_user_string(user_ids=user_ids)
         self.app.client.chat_postMessage(channel=self.CHANNEL_ID, text=user_string)
 
