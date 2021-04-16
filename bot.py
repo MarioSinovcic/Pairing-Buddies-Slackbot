@@ -3,7 +3,12 @@ import random
 from slack_bolt import App
 from dotenv import load_dotenv
 
+SINGLE_USER = "You're the only pear on this tree. Best find more fruit friends to pear with!\n(The pearing bot has only found 1 human user in this channel, feel free to remove it if not in use)."
+MESSAGE_HEADER = "You hear a rustling from the fruit bowl nearby. A lone pear within declares: \n\n"
+
 class SlackBot:
+
+
     def __init__(self):    
         load_dotenv()
         self.CHANNEL_ID = "C01U99F6BPW"
@@ -42,11 +47,17 @@ class SlackBot:
     
     def format_user_ids_into_user_string(self, user_ids):
         member_string = ""
-        
-        if len(user_ids) % 2 == 0:
+
+        if len(user_ids) == 0 or not user_ids:
+            member_string = "It a-pear-s I'm alone in this channel, maybe remove me?"
+        elif len(user_ids) == 1:
+            member_string = SINGLE_USER
+        elif len(user_ids) % 2 == 0:
+            member_string += MESSAGE_HEADER
             for x in range(0, len(user_ids), 2):
                 member_string += self.mention_user(user_ids[x]) + " pears with " + self.mention_user(user_ids[x + 1]) + "\n"
         else:
+            member_string += MESSAGE_HEADER
             member_string += self.mention_user(user_ids[0]) + " pears with " 
             for x in range(1, len(user_ids), 2):
                 member_string += self.mention_user(user_ids[x]) + " pears with " + self.mention_user(user_ids[x + 1]) + "\n"
@@ -54,6 +65,5 @@ class SlackBot:
         return member_string
 
     def post_to_channel(self, user_ids):
-        user_string = "You hear a rustling from the fruit bowl nearby. A lone pear within declares: \n\n"
-        user_string += self.format_user_ids_into_user_string(user_ids=user_ids)
+        user_string = self.format_user_ids_into_user_string(user_ids=user_ids)
         self.app.client.chat_postMessage(channel=self.CHANNEL_ID, text=user_string)
