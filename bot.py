@@ -27,7 +27,7 @@ class SlackBot:
             if is_bot:
                 user_ids.remove(user_id)
 
-        user_ids += ["Ashley", "Tom", "Lindsay", "Alvin", "Mario", "Leah", "Taylor", "Chrisna", "Sam"]
+        user_ids += ["Ashley", "Tom", "Lindsay", "Alvin", "Leah", "Taylor", "Chrisna", "Sam"]
         return user_ids
 
     def verify_user_is_human(self):
@@ -57,6 +57,3 @@ class SlackBot:
         user_string = "You hear a rustling from the fruit bowl nearby. A lone pear within declares: \n\n"
         user_string += self.format_user_ids_into_user_string(user_ids=user_ids)
         self.app.client.chat_postMessage(channel=self.CHANNEL_ID, text=user_string)
-
-bot = SlackBot()
-bot.run()
