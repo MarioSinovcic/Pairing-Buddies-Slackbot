@@ -1,20 +1,22 @@
 import os
 import random
 from slack_bolt import App
-from dotenv import load_dotenv
+from secrets_retriever import SecretsRetriever
 
 SINGLE_USER = "You're the only pear on this tree. Best find more fruit friends to pear with!\n(The pearing bot has only found 1 human user in this channel, feel free to remove it if not in use)."
 MESSAGE_HEADER = "You hear a rustling from the fruit bowl nearby. A lone pear within declares: \n\n"
 
 class SlackBot:
+    def __init__(self):
+        ssm = SecretsRetriever()
 
+        self.slack_bot_token = ssm.get_ssm_param('SLACK_BOT_TOKEN')
+        self.slack_signing_secret = ssm.get_ssm_param('SLACK_SIGNING_SECRET')
 
-    def __init__(self):    
-        load_dotenv()
         self.CHANNEL_ID = "C01U99F6BPW"
         self.app = App(
-            token=os.getenv("SLACK_BOT_TOKEN"),
-            signing_secret=os.getenv("SLACK_SIGNING_SECRET")
+            token=os.getenv(slack_bot_token),
+            signing_secret=os.getenv(slack_signing_secret)
         )
 
     def run(self):

@@ -1,0 +1,20 @@
+{
+  "name": "pairingbot",
+  "version": "1.0.0",
+  "description": "Yeehaw! Get on down for some pairing",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "pairing",
+    "bot",
+    "slack",
+    "yeehaw"
+  ],
+  "author": "Mario and Roger",
+  "license": "ISC",
+  "dependencies": {
+    "serverless-python-requirements": "^5.1.1"
+  }
+}
