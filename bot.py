@@ -1,5 +1,6 @@
 import os
 import random
+import boto3
 from slack_bolt import App
 from secrets_retriever import SecretsRetriever
 
@@ -8,26 +9,36 @@ MESSAGE_HEADER = "You hear a rustling from the fruit bowl nearby. A lone pear wi
 
 class SlackBot:
     def __init__(self):
-        ssm = SecretsRetriever()
+        client = boto3.client('ssm')
 
-        self.slack_bot_token = ssm.get_ssm_param('SLACK_BOT_TOKEN')
-        self.slack_signing_secret = ssm.get_ssm_param('SLACK_SIGNING_SECRET')
+        self.slack_bot_token = client.get_parameter(
+            Name='/mario/pairing-bot/SLACK_BOT_TOKEN',
+            WithDecryption=True
+        )['Parameter']['Value']
+
+        self.slack_signing_secret = client.get_parameter(
+            Name='/mario/pairing-bot/SLACK_SIGNING_SECRET',
+            WithDecryption=True
+        )['Parameter']['Value']
 
         self.CHANNEL_ID = "C01U99F6BPW"
         self.app = App(
-            token=os.getenv(slack_bot_token),
-            signing_secret=os.getenv(slack_signing_secret)
+            token=self.slack_bot_token,
+            signing_secret=self.slack_signing_secret
         )
 
     def run(self):
         user_ids = self.get_user_ids() 
+        print(user_ids)
         shuffled_ids = self.shuffle_user_ids(user_ids=user_ids)
+        print("user ids shuffled")
         self.post_to_channel(user_ids=user_ids)
 
     def get_user_ids(self):
         response = self.app.client.conversations_members(channel=self.CHANNEL_ID)
         user_ids = response["members"]
-
+        print("user ids gotten")
+        
         for user_id in user_ids:
             response = self.app.client.users_info(user=user_id)
             is_bot = response["user"]["is_bot"]
@@ -63,9 +74,11 @@ class SlackBot:
             member_string += self.mention_user(user_ids[0]) + " pears with " 
             for x in range(1, len(user_ids), 2):
                 member_string += self.mention_user(user_ids[x]) + " pears with " + self.mention_user(user_ids[x + 1]) + "\n"
-        
+        print("user list created")
         return member_string
 
     def post_to_channel(self, user_ids):
+        print("post to channel attempted")
         user_string = self.format_user_ids_into_user_string(user_ids=user_ids)
         self.app.client.chat_postMessage(channel=self.CHANNEL_ID, text=user_string)
+        print("post to channel active")

@@ -1,0 +1,35 @@
+AWSTemplateFormatVersion : '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: A sample SAM template for deploying Lambda functions.
+
+Resources:
+# Details about the myDateTimeFunction Lambda function
+  PairingBotFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: handler.main
+      Runtime: python3.7
+# Instructs your myDateTimeFunction is published to an alias named "live".      
+      AutoPublishAlias: live
+# Grants this function permission to call lambda:InvokeFunction
+      Policies:
+        - Version: "2012-10-17"
+          Statement: 
+          - Effect: "Allow"
+            Action: 
+              - "lambda:InvokeFunction"
+            Resource: '*'
+        - Version: "2012-10-17"
+          Statement: 
+          - Effect: "Allow"
+            Action: 
+              - "ssm:GetParameter"
+            Resource: !Sub 'arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/mario/pairing-bot/*'
+  PairingBotTrigger:
+    Type: AWS::Events::Rule
+    Properties:
+      State: DISABLED
+      ScheduleExpression: rate(20 minutes)
+      Targets:
+        - Id: PairingBotFunction
+          Arn: !GetAtt PairingBotFunction.Arn
