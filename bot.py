@@ -5,7 +5,7 @@ from slack_bolt import App
 from secrets_retriever import SecretsRetriever
 from typing import List, Dict
 
-SINGLE_USER = "You're the only pear on this tree. Best find more fruit friends to pear with!\n(The pearing bot has only found 1 human user in this channel, feel free to remove it if not in use)."
+SINGLE_USER_MESSAGE = "You're the only pear on this tree. Best find more fruit friends to pear with!\n(The pearing bot has only found 1 human user in this channel, feel free to remove it if not in use)."
 MESSAGE_HEADER = "You hear a rustling from the fruit bowl nearby. A lone pear within declares: \n\n"
 
 class SlackBot:
@@ -22,7 +22,7 @@ class SlackBot:
             WithDecryption=True
         )['Parameter']['Value']
 
-        self.CHANNEL_ID = "C01U99F6BPW"
+        self.CHANNEL_ID = "C01U99F6BPW" 
         self.app = App(
             token=self.slack_bot_token,
             signing_secret=self.slack_signing_secret
@@ -36,8 +36,6 @@ class SlackBot:
     def get_human_user_ids(self) -> List[str]:
         user_ids = self.get_user_ids_from_channel()
         user_ids = self.remove_bots_from_user_ids(user_ids)
-        test_names = ["Ashley", "Tom", "Lindsay", "Alvin", "Leah", "Taylor", "Chrisna", "Sam"]
-        user_ids = user_ids + test_names
         return user_ids
 
     def get_user_ids_from_channel(self) -> Dict[str, str]:
@@ -65,7 +63,7 @@ class SlackBot:
         if len(user_ids) == 0 or not user_ids:
             member_string = "It a-pear-s I'm alone in this channel, maybe remove me?"
         elif len(user_ids) == 1:
-            member_string = SINGLE_USER
+            member_string = SINGLE_USER_MESSAGE
         elif len(user_ids) % 2 == 0:
             member_string += MESSAGE_HEADER
             for x in range(0, len(user_ids), 2):

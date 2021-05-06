@@ -25,11 +25,3 @@ Resources:
             Action: 
               - "ssm:GetParameter"
             Resource: !Sub 'arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/mario/pairing-bot/*'
-  PairingBotTrigger:
-    Type: AWS::Events::Rule
-    Properties:
-      State: DISABLED
-      ScheduleExpression: rate(20 minutes)
-      Targets:
-        - Id: PairingBotFunction
-          Arn: !GetAtt PairingBotFunction.Arn
