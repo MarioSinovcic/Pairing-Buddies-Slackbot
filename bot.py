@@ -2,7 +2,6 @@ import os
 import random
 import boto3
 from slack_bolt import App
-from secrets_retriever import SecretsRetriever
 from typing import List, Dict
 
 SINGLE_USER_MESSAGE = "You're the only pear on this tree. Best find more fruit friends to pear with!\n(The pearing bot has only found 1 human user in this channel, feel free to remove it if not in use)."
