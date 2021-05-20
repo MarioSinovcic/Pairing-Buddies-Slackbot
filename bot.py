@@ -5,7 +5,19 @@ from slack_bolt import App
 from typing import List, Dict
 
 SINGLE_USER_MESSAGE = "You're the only pear on this tree. Best find more fruit friends to pear with!\n(The pearing bot has only found 1 human user in this channel, feel free to remove it if not in use)."
-MESSAGE_HEADER = "You hear a rustling from the fruit bowl nearby. A lone pear within declares: \n\n"
+MESSAGE_HEADERS = [
+    "You hear a rustling from the fruit bowl nearby. A lone pear within declares: ",
+    "A sentient pear? Has science gone too far?",
+    "In Soviet Russia, pear picks you!",
+    "I’m here! I’m a pear! Get used to it!",
+    "The time is ripe for pearing!",
+    "Orange you glad I didn’t re-use an old fruit pun! Wait, I did? You never saw this",
+    "Getcha fruit on. Getcha fruit on. Getcha fruit on. Getcha. Getcha. Getcha. Getcha…",
+    "On the first day of work week, this bot it sent to theeeeeeee; Some grand ol' coding compan-eeeeee",
+]
+
+TEST_CHANNEL = "C01U99F6BPW"
+LIVE_CHANNEL = "G01PM64DH8C" 
 
 class SlackBot:
     def __init__(self):
@@ -21,7 +33,7 @@ class SlackBot:
             WithDecryption=True
         )['Parameter']['Value']
 
-        self.CHANNEL_ID = "G01PM64DH8C" 
+        self.CHANNEL_ID = LIVE_CHANNEL
         self.app = App(
             token=self.slack_bot_token,
             signing_secret=self.slack_signing_secret
@@ -64,16 +76,22 @@ class SlackBot:
         elif len(user_ids) == 1:
             member_string = SINGLE_USER_MESSAGE
         elif len(user_ids) % 2 == 0:
-            member_string += MESSAGE_HEADER
+            message_header = self.get_random_message_header()
+            member_string += message_header + "\n\n"
             for x in range(0, len(user_ids), 2):
                 member_string += self.generate_user_mention_tag(user_ids[x]) + " pears with " + self.generate_user_mention_tag(user_ids[x + 1]) + "\n"
         else:
-            member_string += MESSAGE_HEADER
+            message_header = self.get_random_message_header()
+            member_string += message_header + "\n\n"
             member_string += self.generate_user_mention_tag(user_ids[0]) + " pears with " 
             for x in range(1, len(user_ids), 2):
                 member_string += self.generate_user_mention_tag(user_ids[x]) + " pears with " + self.generate_user_mention_tag(user_ids[x + 1]) + "\n"
 
         return member_string
+    
+    def get_random_message_header(self) -> str:
+        random_index = random.randint(0, len(MESSAGE_HEADERS) - 1)
+        return MESSAGE_HEADERS[random_index]
 
     def post_to_channel(self, user_ids) -> None:
         user_string = self.format_user_ids_into_user_string(user_ids=user_ids)
