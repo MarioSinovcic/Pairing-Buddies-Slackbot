@@ -7,6 +7,9 @@ from typing import List, Dict
 SINGLE_USER_MESSAGE = "You're the only pear on this tree. Best find more fruit friends to pear with!\n(The pearing bot has only found 1 human user in this channel, feel free to remove it if not in use)."
 MESSAGE_HEADER = "You hear a rustling from the fruit bowl nearby. A lone pear within declares: \n\n"
 
+TEST_CHANNEL = "C01U99F6BPW"
+LIVE_CHANNEL = "G01PM64DH8C" 
+
 class SlackBot:
     def __init__(self):
         client = boto3.client('ssm')
@@ -21,7 +24,7 @@ class SlackBot:
             WithDecryption=True
         )['Parameter']['Value']
 
-        self.CHANNEL_ID = "C01U99F6BPW" 
+        self.CHANNEL_ID = TEST_CHANNEL 
         self.app = App(
             token=self.slack_bot_token,
             signing_secret=self.slack_signing_secret
