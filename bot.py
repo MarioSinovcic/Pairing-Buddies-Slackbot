@@ -21,7 +21,7 @@ class SlackBot:
             WithDecryption=True
         )['Parameter']['Value']
 
-        self.CHANNEL_ID = "G01PM64DH8C" 
+        self.CHANNEL_ID = "C01U99F6BPW" 
         self.app = App(
             token=self.slack_bot_token,
             signing_secret=self.slack_signing_secret

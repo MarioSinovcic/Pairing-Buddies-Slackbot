@@ -119,3 +119,5 @@ node_modules/
 # Auto-generated SAM
 .aws-sam/
 .aws-sam/build.toml
+
+tmp/
