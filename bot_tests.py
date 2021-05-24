@@ -5,14 +5,9 @@ MESSAGE_HEADER = "You hear a rustling from the fruit bowl nearby. A lone pear wi
 
 class BotTests(unittest.TestCase):
     def setUp(self):
-        self.bot = SlackBot()
-
-    def test_should_mention_user_correctly(self):
-        name = "TestBoi"
-        result = self.bot.mention_user(name)
-        expected_name = "<@TestBoi>"
-
-        self.assertEqual(expected_name, result)
+        app = ""
+        id = ""
+        self.bot = SlackBot(app, id)
 
     def test_should_generate_message_for_one_user(self): 
         name = ["TestBoi"]

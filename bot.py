@@ -7,28 +7,11 @@ from typing import List, Dict
 SINGLE_USER_MESSAGE = "You're the only pear on this tree. Best find more fruit friends to pear with!\n(The pearing bot has only found 1 human user in this channel, feel free to remove it if not in use)."
 MESSAGE_HEADER = "You hear a rustling from the fruit bowl nearby. A lone pear within declares: \n\n"
 
-TEST_CHANNEL = "C01U99F6BPW"
-LIVE_CHANNEL = "G01PM64DH8C" 
-
 class SlackBot:
-    def __init__(self):
-        client = boto3.client('ssm')
+    def __init__(self, app, channel_id):
+        self.app = app
+        self.channel_id = channel_id
 
-        self.slack_bot_token = client.get_parameter(
-            Name='/mario/pairing-bot/SLACK_BOT_TOKEN',
-            WithDecryption=True
-        )['Parameter']['Value']
-
-        self.slack_signing_secret = client.get_parameter(
-            Name='/mario/pairing-bot/SLACK_SIGNING_SECRET',
-            WithDecryption=True
-        )['Parameter']['Value']
-
-        self.CHANNEL_ID = TEST_CHANNEL 
-        self.app = App(
-            token=self.slack_bot_token,
-            signing_secret=self.slack_signing_secret
-        )
 
     def run(self) -> None:
         user_ids = self.get_human_user_ids() 
@@ -41,7 +24,7 @@ class SlackBot:
         return user_ids
 
     def get_user_ids_from_channel(self) -> Dict[str, str]:
-        response = self.app.client.conversations_members(channel=self.CHANNEL_ID)
+        response = self.app.client.conversations_members(channel=self.channel_id)
         return response['members']
 
     def remove_bots_from_user_ids(self, user_ids) -> List[str]:
@@ -80,4 +63,4 @@ class SlackBot:
 
     def post_to_channel(self, user_ids) -> None:
         user_string = self.format_user_ids_into_user_string(user_ids=user_ids)
-        self.app.client.chat_postMessage(channel=self.CHANNEL_ID, text=user_string)
+        self.app.client.chat_postMessage(channel=self.channel_id, text=user_string)
